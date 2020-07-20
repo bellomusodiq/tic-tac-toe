@@ -1,14 +1,65 @@
-#board {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    width: 300px;
+body {
+ 
+    background-color: rgb(224, 224, 224);
+    height: 100vh;
 }
+.board {
+    display: grid;
+    grid-template-columns: 90px 90px 90px;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    width: fit-content;
+    margin: 10% auto;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: purple;
+    color: rgb(224, 224, 224);
+    text-align: center;
+    padding: 4px auto;
+}
+
+.footer > p {
+    margin-bottom: 0;
+    font-family: 'Fondamento', cursive;
+}
+
 .square {
-    height: calc(300px / 3);
+    height: 90px;
     box-sizing: border-box;
-    border: 1px solid black;
+    border: 2px solid rgb(97, 0, 97);
+    background-color: purple;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5em;
+    font-size: 1.9em;
+    color: white
 }
+
+.square:hover {
+    background-color: rgb(224, 224, 224);
+    color: rgb(97, 0, 97);
+    transition-duration: 500ms;
+}
+
+#title {
+    color: white;
+    background-color: purple;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-family: 'Lobster', cursive;
+}
+
+#playerWin {
+    color: rgb(97, 0, 97);
+    text-align: center;
+    margin: 15%  auto;
+    font-family: 'Fondamento', cursive;
+}
+
+

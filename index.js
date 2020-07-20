@@ -1,18 +1,18 @@
-let turn = 'X' // or 'O'
-let gameEnd = false;
-counter = 0;
+let turn = 'X';
+let counter = 0;
+document.getElementById("playerWin").style.display= 'none'
+
+
+const board = document.getElementById("board");
+const squares = board.children;
 
 const vBoard = [
     ['', '', ''],
     ['', '', ''],
-    ['', '', '']
-]
+    ['', '', ''] //
+] // vBoard[i][j] = turn;
 
-const board = document.getElementById("board");
-
-const squares = board.children;
-
-const boardMap = id => {
+const mapBoard = id => {
     switch (id) {
         case '1':
             return [0, 0]
@@ -35,67 +35,64 @@ const boardMap = id => {
     }
 }
 
-const checkBoard = () => {
-    // check horizontal vBoard[i][1]
+const playGame = e => {
     let win = false;
-    for (let i = 0; i < 3; i++) {
-        if (vBoard[i][0] && (vBoard[i][0] === vBoard[i][1]) && (vBoard[i][1] === vBoard[i][2])) {
+    const square = e.target;
+    const [X, Y] = mapBoard(square.getAttribute("id"));
+    if (!vBoard[X][Y]) {
+        vBoard[X][Y] = turn;
+        counter++;
+        // check for wins
+        // horizontal wins
+        // either (0,0 == 0,1 == 0,2) or (1,0 == 1,1 == 1,2) or (2,0 == 2,1 == 2,2)
+        for (let i = 0; i < 3; i++) {
+            if (vBoard[i][0] && (vBoard[i][0] === vBoard[i][1]) && (vBoard[i][1] === vBoard[i][2])) {
+                win = true;
+            }
+        }
+        // vertical wins
+        // either (0,0 == 1,0 == 2,0) or (0,1 == 1,1 == 2,1) or (0,2 == 1,2 == 2,2)
+        for (let i = 0; i < 3; i++) {
+            if (vBoard[0][i] && (vBoard[0][i] === vBoard[1][i]) && (vBoard[1][i] === vBoard[2][i])) {
+                win = true;
+            }
+        }
+        // diagonal wins
+        if (vBoard[0][0] && (vBoard[0][0] === vBoard[1][1]) && (vBoard[1][1] === vBoard[2][2])) {
             win = true;
         }
-    }
-    // check vertical vBoard[1][i]
-    for (let i = 0; i < 3; i++) {
-        if (vBoard[0][i] && (vBoard[0][i] === vBoard[1][i]) && (vBoard[1][i] === vBoard[2][i])) {
+        if (vBoard[0][2] && (vBoard[0][2] === vBoard[1][1]) && (vBoard[1][1] === vBoard[2][0])) {
             win = true;
         }
-    }
-    // check diagonal
-    if (vBoard[0][0] && (vBoard[0][0] === vBoard[1][1]) && (vBoard[1][1] === vBoard[2][2])) {
-        win = true;
-    }
-    if (vBoard[0][2] && (vBoard[0][2] === vBoard[1][1]) && (vBoard[1][1] === vBoard[2][0])) {
-        win = true;
-    }
-    return win;
-}
-
-const placeToBoard = (id, square) => {
-    if (!gameEnd) {
-
-        const coordinates = boardMap(id); // [0,1]
-        // coordinates[0] = 0
-        // coordinates[1] = 1
-        // if there is either X or O on the square, don't do anythin
-        if (!vBoard[coordinates[0]][coordinates[1]]) {
-
-            vBoard[coordinates[0]][coordinates[1]] = turn;
-            counter++;
-            if (checkBoard()) {
-                alert(`${turn} wins`);
-                gameEnd = true;
-            }
-            // double for loop
-            // counter = 0
-            // for (let i=0; i<vBoard.length; i++) {
-            //     for (let j=0; j<vBoard[i]; j++) {
-            //         if (vBoard[i][j]) {
-            //             counter++;
-            //         }
-            //     }
-            // } -> O(1) > O(n) > O(n2)
-            if (counter === 9) {
-                alert('game ended in a draw');
-            }
-            square.innerHTML = turn;
-            turn = turn === 'X' ? 'O' : 'X';
+        square.innerHTML = turn;
+        if (win) {
+            document.getElementById("board").style.display= 'none';
+            document.getElementById("playerWin").style.display= 'block';
+            document.getElementById("msg").innerHTML= `Player ${turn} Wins!!!`;
+            setTimeout(() => {
+                window.location.reload();
+            }, 1100);
         }
+        if (counter === 9) {
+            document.getElementById("board").style.display= 'none';
+            document.getElementById("playerWin").style.display= 'block';
+            document.getElementById("msg").innerHTML= `Ended in A Draw!!!`;
+            setTimeout(() => {
+                window.location.reload();
+            }, 1100)
+        }
+        turn = turn === 'X' ? 'O' : 'X';
     }
 }
 
-for (let square of squares) {
-    square.addEventListener('click', (e) => {
-        const id = square.getAttribute('id'); // 1 => vBoard[0][0]
-        placeToBoard(id, square);
+
+for (let i = 0; i < squares.length; i++) {
+    const square = squares[i];
+    square.addEventListener("click", e => {
+        playGame(e)
     })
 }
+
+
+
 
